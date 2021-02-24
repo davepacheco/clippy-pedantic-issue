@@ -1,0 +1,47 @@
+This behavior seems surprising.  From a fresh clone of this repo, using Rust 1.50:
+
+```
+$ cargo --version
+cargo 1.50.0 (f04e7fab7 2021-02-04)
+$ cargo clippy -- --version
+clippy 0.0.212 (cb75ad5d 2021-02-10)
+$ cargo clean
+$ cargo clippy
+    Checking clippy-pedantic-issue v0.1.0 (/Users/dap/oxide/clippy-pedantic-issue)
+warning: this function's return value is unnecessarily wrapped by `Result`
+ --> src/lib.rs:1:1
+  |
+1 | / fn foo() -> Result<usize, usize> {
+2 | |     Ok(3)
+3 | | }
+  | |_^
+  |
+  = note: `#[warn(clippy::unnecessary_wraps)]` on by default
+  = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#unnecessary_wraps
+help: remove `Result` from the return type...
+  |
+1 | fn foo() -> usize {
+  |             ^^^^^
+help: ...and change the returning expressions
+  |
+2 |     3
+  |
+
+warning: 1 warning emitted
+
+    Finished dev [unoptimized + debuginfo] target(s) in 0.39s
+
+```
+
+That's surprising because `unnecessary_wraps` is a "pedantic" warning and is supposed to be off by default.  Further, this seems to be a regression from Rust 1.49:
+
+```
+$ cargo +1.49 --version
+cargo 1.49.0 (d00d64df9 2020-12-05)
+$ cargo +1.49 clippy -- --version
+clippy 0.0.212 (e1884a8e 2020-12-29)
+$ cargo +1.49 clean
+$ cargo +1.49 clippy
+    Checking clippy-pedantic-issue v0.1.0 (/Users/dap/oxide/clippy-pedantic-issue)
+    Finished dev [unoptimized + debuginfo] target(s) in 0.55s
+```
