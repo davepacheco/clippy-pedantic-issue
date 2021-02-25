@@ -1,3 +1,5 @@
+**Edit:** The reason this fails on 1.50 seems to be because it's a new warning.  While the current documentation says it's "pedantic", it wasn't in 1.50.
+
 This behavior seems surprising.  From a fresh clone of this repo, using Rust 1.50:
 
 ```
